@@ -155,8 +155,11 @@ class DecoderLayer(nn.Module):
     def forward(self, x, memory, src_mask, tgt_mask):
         # pdb.set_trace()
         m = memory
+        # 先自己做自注意力
         x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, tgt_mask))
+        # 再和encoder结果做自注意力
         x = self.sublayer[1](x, lambda x: self.src_attn(x, m, m, src_mask))
+        # 再加全连接
         return self.sublayer[2](x, self.feed_forward)
 
 class Decoder(nn.Module):

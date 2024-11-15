@@ -128,7 +128,7 @@ def run_epoch(data_iter, model, loss_compute):
 
 
 if __name__ == "__main__":
-    tmp_model = make_model(10, 10, 6)
+    tmp_model = make_model(10, 10, 2)
     tmp_model.cuda()
     for i, batch in enumerate(data_gen(10, 4, 2000)):
         if i % 100 == 0:
