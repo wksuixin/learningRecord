@@ -158,15 +158,3 @@ if __name__ == "__main__":
     embedding_layer(inputs.input_ids)
     
     
-    import numpy as np
-    
-    a = np.random.randint(1, 100000, (2,10))
-    a = np.float32(a)
-    a = torch.from_numpy(a)
-    layer = nn.LayerNorm(10)
-    out = layer(a)
-    print(out)
-    
-    
-    
-    
