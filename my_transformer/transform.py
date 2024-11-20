@@ -123,6 +123,25 @@ class MyEmbeddings(nn.Module):
     
 
 
+
+
+class FeedForward(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.linear_1 = nn.Linear(config.hidden_size, config.intermediate_size)
+        self.linear_2 = nn.Linear(config.intermediate_size, config.hidden_size)
+        self.gelu = nn.GELU()
+        self.drop_out = nn.Dropout(0.5)#config.hidden_dropout_prob)
+
+    def forward(self, x):
+        x = self.linear_1(x)
+        x = self.gelu(x)
+        x = self.linear_2(x)
+        x = self.drop_out(x)
+        return x
+
+
+
 if __name__ == "__main__":
     model_path = "/home/wk/code/model/Qwen2.5-0.5B/"
     tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -138,15 +157,13 @@ if __name__ == "__main__":
     inputs_embs = preprocess(tokenizer, token_emb, texts)
     K = V = inputs_embs
     
-    # res = scaled_dot_product_atten(Q, K, V)
-    # print(res.shape)
-    
-    # attention_head = AttentionHead(896, 64)
-    # outputs = attention_head(Q, K, V)
-    # print(outputs.shape)
     
     multi_head = MultiHeadAttention(config)
-    head_output = multi_head(Q, K, V)
+    atten_output = head_output = multi_head(Q, K, V)
+    
+
+    feed_dorward = FeedForward(config)
+    feed_dorward(atten_output)
     out = feed_forward(head_output)
     print(out.shape)
     
@@ -156,5 +173,5 @@ if __name__ == "__main__":
     
     embedding_layer = MyEmbeddings(config)
     embedding_layer(inputs.input_ids)
-    
+
     
